@@ -1,0 +1,112 @@
+{
+  "run_id": "",
+  "run_mode": "new_project",
+  "feature_title": "CodeForge Run Dashboard — Initial Scaffold",
+  "feature_description": "A Next.js 14 TypeScript application providing the visual scaffold for a pipeline run dashboard. It includes a fixed header with branding, tab-based view switching, and a call-budget progress bar; a History view showing a styled status table populated with hardcoded run records; a Run tab placeholder; and a Vitest smoke test verifying the History table renders correctly.",
+  "scope": {
+    "in_scope": [
+      "Next.js 14 TypeScript project with JetBrains Mono (Google Fonts), body background #0a0b0e, and text color #cdd2db applied globally.",
+      "Fixed 50px header (background #101318, 1px bottom border #272d36) containing: a green logo dot, a bold CODEFORGE label, Run and History tab buttons that toggle the active view, and a call-budget progress bar displaying a hardcoded current/ceiling agent-call count.",
+      "History view (default active tab): a full-width scrollable table with column headers STATUS | FEATURE | RUN ID | REACHED | WHEN. Each row has a 2px left-border accent colored by its status, a status dot and uppercase label, the feature brief text, run ID, last phase reached, and a relative timestamp string. Exactly 7 hardcoded rows covering all four status states: succeeded (oklch(0.79 0.14 153)), running (oklch(0.76 0.13 187)), awaiting_human (oklch(0.82 0.14 119)), failed_terminal (oklch(0.66 0.21 27)).",
+      "Run tab view: a placeholder div rendered when the Run tab is active.",
+      "A Vitest smoke test that mounts the History view component and asserts exactly 7 data rows are present in the DOM."
+    ],
+    "explicitly_out_of_scope": [
+      "Any real data fetching, API routes, or backend integration.",
+      "Persistent tab state (e.g. URL routing per tab).",
+      "Authentication or access control.",
+      "Additional test coverage beyond the single smoke test.",
+      "Responsive or mobile layout adaptations.",
+      "Interactivity within table rows (e.g. click-to-expand, sorting, filtering)."
+    ]
+  },
+  "acceptance_criteria": [
+    {
+      "id": "AC-001",
+      "description": "The page renders a fixed-position header exactly 50px tall with background #101318 and a 1px bottom border in #272d36. The header contains a green logo dot, a bold 'CODEFORGE' label, two tab buttons labelled 'Run' and 'History', and a call-budget progress bar that displays a current agent-call count against a ceiling (e.g. '12 / 50 calls') with a filled bar reflecting the ratio.",
+      "testable": true,
+      "priority": "must"
+    },
+    {
+      "id": "AC-002",
+      "description": "On initial load the History tab is active and the History view is visible. The view renders a scrollable table with exactly the five column headers STATUS, FEATURE, RUN ID, REACHED, and WHEN, and exactly 7 data rows. Each row carries a 2px left-border accent whose color matches its status value: succeeded → oklch(0.79 0.14 153), running → oklch(0.76 0.13 187), awaiting_human → oklch(0.82 0.14 119), failed_terminal → oklch(0.66 0.21 27). Each row also displays a status dot in the same accent color, an uppercase status label, a feature description string, a run ID string, a last-phase-reached string, and a relative timestamp string. All four status states appear at least once across the 7 rows.",
+      "testable": true,
+      "priority": "must"
+    },
+    {
+      "id": "AC-003",
+      "description": "Clicking the Run tab hides the History table and renders the Run placeholder div; clicking the History tab restores the History table and hides the Run placeholder. Only one view is visible at a time.",
+      "testable": true,
+      "priority": "must"
+    },
+    {
+      "id": "AC-004",
+      "description": "The Vitest smoke test imports and mounts the History view component in a jsdom environment and asserts that exactly 7 table data rows are present in the rendered output. The test suite passes with no errors.",
+      "testable": true,
+      "priority": "must"
+    }
+  ],
+  "data_contracts": [
+    {
+      "entity": "RunRecord",
+      "fields": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "Unique identifier for the hardcoded row, used as React key."
+        },
+        {
+          "name": "status",
+          "type": "'succeeded' | 'running' | 'awaiting_human' | 'failed_terminal'",
+          "description": "Pipeline run status; drives row accent color and label."
+        },
+        {
+          "name": "feature",
+          "type": "string",
+          "description": "Short description of the feature the run was building."
+        },
+        {
+          "name": "runId",
+          "type": "string",
+          "description": "Human-readable run identifier string displayed in the RUN ID column."
+        },
+        {
+          "name": "reached",
+          "type": "string",
+          "description": "Name of the last pipeline phase reached (e.g. 'requirements', 'coder', 'reviewer')."
+        },
+        {
+          "name": "when",
+          "type": "string",
+          "description": "Pre-formatted relative timestamp string (e.g. '2 hours ago') for display in the WHEN column."
+        }
+      ],
+      "relationships": []
+    },
+    {
+      "entity": "StatusConfig",
+      "fields": [
+        {
+          "name": "status",
+          "type": "'succeeded' | 'running' | 'awaiting_human' | 'failed_terminal'",
+          "description": "Status key."
+        },
+        {
+          "name": "color",
+          "type": "string",
+          "description": "oklch color string used for the row left-border accent and status dot."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "Uppercase display label for the status."
+        }
+      ],
+      "relationships": [
+        "StatusConfig entries are keyed by RunRecord.status to resolve display color and label for each row."
+      ]
+    }
+  ],
+  "changes_from_prior": null,
+  "human_confirmed_decisions": []
+}

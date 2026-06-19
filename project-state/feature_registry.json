@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0.0",
+  "features": [
+    {
+      "feature_title": "CodeForge Run Dashboard — Initial Scaffold",
+      "introduced_run": "run-d5f2cf06a491",
+      "last_modified_run": "run-d5f2cf06a491",
+      "status": "tested",
+      "interfaces": []
+    }
+  ]
+}

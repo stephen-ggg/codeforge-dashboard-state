@@ -4,22 +4,35 @@
     {
       "id": "TD-001",
       "domain": "language",
-      "decision": "TypeScript (strict) throughout.",
-      "rationale": "Project stack profile: nextjs.",
+      "decision": "TypeScript throughout — all source files use .ts/.tsx.",
+      "rationale": "Seeded locked decision from stack guidance.",
       "locked": true,
       "record": true,
-      "run_id": "project-init",
-      "confirmed_at": "2026-06-19T00:00:00Z"
+      "supersedes": null,
+      "run_id": "run-d5f2cf06a491",
+      "confirmed_at": "2026-06-19T15:30:12.653522+00:00"
     },
     {
       "id": "TD-002",
       "domain": "framework",
-      "decision": "Next.js (App Router): React UI under app/ + components/, backend as Route Handlers under app/api/**/route.ts.",
-      "rationale": "Single toolchain delivers UI and API in one project; codeforge maintains the frontend↔API contract.",
+      "decision": "Next.js 14 App Router. All page and layout files live under app/. Client-interactive components are marked 'use client'.",
+      "rationale": "Seeded locked decision from stack guidance. App Router is confirmed. HistoryTable and AppHeader are pure client components (no async server data), making them fully compatible with Vitest + jsdom.",
       "locked": true,
       "record": true,
-      "run_id": "project-init",
-      "confirmed_at": "2026-06-19T00:00:00Z"
+      "supersedes": null,
+      "run_id": "run-d5f2cf06a491",
+      "confirmed_at": "2026-06-19T15:30:12.653574+00:00"
+    },
+    {
+      "id": "TD-003",
+      "domain": "testing",
+      "decision": "Vitest + React Testing Library (@testing-library/react) + jsdom as the test environment.",
+      "rationale": "AC-004 explicitly names Vitest. React Testing Library is the standard companion for component smoke tests. jsdom allows DOM assertions in a Node environment. Components must be 'use client' to be mountable in jsdom (no async server component APIs used). This supersedes any Jest default that ships with Next.js.",
+      "locked": true,
+      "record": true,
+      "supersedes": null,
+      "run_id": "run-d5f2cf06a491",
+      "confirmed_at": "2026-06-19T15:30:12.653589+00:00"
     }
   ]
 }

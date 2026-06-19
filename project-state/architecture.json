@@ -1,0 +1,225 @@
+{
+  "schema_version": "1.0.0",
+  "last_updated_run": "run-d5f2cf06a491",
+  "modules": [
+    {
+      "name": "RunData",
+      "responsibility": "Define the RunRecord and StatusConfig TypeScript types, export the array of exactly 7 hardcoded RunRecord objects, and export the STATUS_CONFIG map that resolves each status key to its display color and uppercase label.",
+      "dependencies": [],
+      "exposes": [
+        "getRunRecords",
+        "getStatusConfig"
+      ],
+      "consumes": []
+    },
+    {
+      "name": "HistoryTable",
+      "responsibility": "Render the scrollable history table with exactly the five column headers (STATUS, FEATURE, RUN ID, REACHED, WHEN) and one row per RunRecord. Each row applies a 2px left-border accent, a colored status dot, and an uppercase label derived from the status config. Internally sources data from RunData.",
+      "dependencies": [
+        "RunData"
+      ],
+      "exposes": [
+        "HistoryTable"
+      ],
+      "consumes": [
+        "getRunRecords",
+        "getStatusConfig"
+      ]
+    },
+    {
+      "name": "AppHeader",
+      "responsibility": "Render the fixed 50px header containing the green logo dot, bold CODEFORGE label, Run and History tab buttons, and the call-budget progress bar. Accepts activeTab and onTabChange as props to drive tab button active states.",
+      "dependencies": [],
+      "exposes": [
+        "AppHeader"
+      ],
+      "consumes": []
+    },
+    {
+      "name": "RunPlaceholder",
+      "responsibility": "Render the placeholder div displayed when the Run tab is active. No props required.",
+      "dependencies": [],
+      "exposes": [
+        "RunPlaceholder"
+      ],
+      "consumes": []
+    },
+    {
+      "name": "DashboardPage",
+      "responsibility": "Root Next.js page. Owns the activeTab useState. Composes AppHeader (passing tab state and handler), and conditionally renders HistoryTable (History tab active) or RunPlaceholder (Run tab active). Applies global font and body styles via the root layout.",
+      "dependencies": [
+        "AppHeader",
+        "HistoryTable",
+        "RunPlaceholder"
+      ],
+      "exposes": [],
+      "consumes": [
+        "AppHeader",
+        "HistoryTable",
+        "RunPlaceholder"
+      ]
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "getRunRecords",
+      "kind": "function",
+      "owner_module": "RunData",
+      "contract": {
+        "module": "lib/run-data",
+        "symbol": "getRunRecords",
+        "signature": "getRunRecords(): RunRecord[]",
+        "parameters": [],
+        "returns": {
+          "type": "RunRecord[]",
+          "description": "Array of exactly 7 hardcoded RunRecord objects. All four status values ('succeeded', 'running', 'awaiting_human', 'failed_terminal') appear at least once across the 7 records."
+        },
+        "raises": []
+      },
+      "stability": "stable",
+      "successor": null,
+      "removal_run": null
+    },
+    {
+      "name": "getStatusConfig",
+      "kind": "function",
+      "owner_module": "RunData",
+      "contract": {
+        "module": "lib/run-data",
+        "symbol": "getStatusConfig",
+        "signature": "getStatusConfig(): Record<RunRecord['status'], StatusConfig>",
+        "parameters": [],
+        "returns": {
+          "type": "Record<'succeeded' | 'running' | 'awaiting_human' | 'failed_terminal', StatusConfig>",
+          "description": "Map from each of the four status keys to a StatusConfig object. StatusConfig has fields: status (the key), color (oklch string — succeeded: 'oklch(0.79 0.14 153)', running: 'oklch(0.76 0.13 187)', awaiting_human: 'oklch(0.82 0.14 119)', failed_terminal: 'oklch(0.66 0.21 27)'), and label (uppercase display string)."
+        },
+        "raises": []
+      },
+      "stability": "stable",
+      "successor": null,
+      "removal_run": null
+    },
+    {
+      "name": "HistoryTable",
+      "kind": "function",
+      "owner_module": "HistoryTable",
+      "contract": {
+        "module": "components/history-table",
+        "symbol": "HistoryTable",
+        "signature": "HistoryTable(): JSX.Element",
+        "parameters": [],
+        "returns": {
+          "type": "JSX.Element",
+          "description": "Renders a scrollable <table> element. The <thead> contains exactly one <tr> with five <th> cells: STATUS, FEATURE, RUN ID, REACHED, WHEN. The <tbody> contains exactly 7 <tr> rows, one per RunRecord returned by getRunRecords(). Each row has a 2px solid left border whose color is the accent color from getStatusConfig() for that row's status. Each row renders: a colored status dot (e.g. a small <span> in the accent color), an uppercase status label, the feature string, the runId string, the reached string, and the when string. The component is marked 'use client'."
+        },
+        "raises": []
+      },
+      "stability": "stable",
+      "successor": null,
+      "removal_run": null
+    },
+    {
+      "name": "AppHeader",
+      "kind": "function",
+      "owner_module": "AppHeader",
+      "contract": {
+        "module": "components/app-header",
+        "symbol": "AppHeader",
+        "signature": "AppHeader(props: AppHeaderProps): JSX.Element",
+        "parameters": [
+          {
+            "name": "props.activeTab",
+            "type": "'run' | 'history'",
+            "description": "Controls which tab button is rendered in the active state."
+          },
+          {
+            "name": "props.onTabChange",
+            "type": "(tab: 'run' | 'history') => void",
+            "description": "Called when a tab button is clicked, passing the tab key of the clicked button."
+          },
+          {
+            "name": "props.callCurrent",
+            "type": "number",
+            "description": "Current agent-call count to display in the progress bar (e.g. 12)."
+          },
+          {
+            "name": "props.callCeiling",
+            "type": "number",
+            "description": "Maximum agent-call ceiling to display and use for bar fill ratio (e.g. 50)."
+          }
+        ],
+        "returns": {
+          "type": "JSX.Element",
+          "description": "Renders a fixed-position <header> element exactly 50px tall, background #101318, with a 1px bottom border in #272d36. Contains: a green logo dot element, a bold 'CODEFORGE' text label, a 'Run' button and a 'History' button (the button matching activeTab is styled as active), and a call-budget section displaying '{callCurrent} / {callCeiling} calls' with a filled bar whose width is (callCurrent / callCeiling * 100)%. The component is marked 'use client'."
+        },
+        "raises": []
+      },
+      "stability": "stable",
+      "successor": null,
+      "removal_run": null
+    },
+    {
+      "name": "RunPlaceholder",
+      "kind": "function",
+      "owner_module": "RunPlaceholder",
+      "contract": {
+        "module": "components/run-placeholder",
+        "symbol": "RunPlaceholder",
+        "signature": "RunPlaceholder(): JSX.Element",
+        "parameters": [],
+        "returns": {
+          "type": "JSX.Element",
+          "description": "Renders a single <div> element acting as a placeholder for the Run tab view. No required props. Content may be an empty div or a minimal 'Run view coming soon' label."
+        },
+        "raises": []
+      },
+      "stability": "stable",
+      "successor": null,
+      "removal_run": null
+    }
+  ],
+  "data_flow": [
+    {
+      "name": "RunRecordsToTable",
+      "from_": "RunData",
+      "to": "HistoryTable",
+      "via": "getRunRecords",
+      "data_description": "Array of 7 RunRecord objects flows into HistoryTable at render time. Each record supplies the row data: id (React key), status, feature, runId, reached, when."
+    },
+    {
+      "name": "StatusConfigToTable",
+      "from_": "RunData",
+      "to": "HistoryTable",
+      "via": "getStatusConfig",
+      "data_description": "Status config map flows into HistoryTable. Each row looks up its status key to resolve the accent color (oklch string) and uppercase display label."
+    },
+    {
+      "name": "TabStateToHeader",
+      "from_": "DashboardPage",
+      "to": "AppHeader",
+      "via": "AppHeader",
+      "data_description": "activeTab string ('run' | 'history'), onTabChange callback, callCurrent (hardcoded e.g. 12), and callCeiling (hardcoded e.g. 50) are passed as props."
+    },
+    {
+      "name": "TabChangeToPage",
+      "from_": "AppHeader",
+      "to": "DashboardPage",
+      "via": "AppHeader",
+      "data_description": "onTabChange callback fires with the clicked tab key, triggering a useState update in DashboardPage that re-renders the active view."
+    },
+    {
+      "name": "ConditionalHistoryRender",
+      "from_": "DashboardPage",
+      "to": "HistoryTable",
+      "via": "HistoryTable",
+      "data_description": "DashboardPage renders HistoryTable only when activeTab === 'history'. No props passed; HistoryTable sources its own data."
+    },
+    {
+      "name": "ConditionalRunRender",
+      "from_": "DashboardPage",
+      "to": "RunPlaceholder",
+      "via": "RunPlaceholder",
+      "data_description": "DashboardPage renders RunPlaceholder only when activeTab === 'run'. No props passed."
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0.0",
+  "entries": [
+    {
+      "criterion_id": "AC-001",
+      "test_case_ids": [
+        "TC-001"
+      ],
+      "status": "covered",
+      "notes": "Both sub-tests pass: CODEFORGE label, Run and History buttons, call-budget text pattern, and <header> root element all verified in jsdom.",
+      "run_id": "run-d5f2cf06a491"
+    },
+    {
+      "criterion_id": "AC-002",
+      "test_case_ids": [
+        "TC-002"
+      ],
+      "status": "covered",
+      "notes": "All eight assertions pass: getRunRecords returns exactly 7 records covering all four status values with required non-empty fields; getStatusConfig returns correct oklch colors and uppercase labels; HistoryTable renders five column headers, 7 tbody rows, all status labels, and correct inline border-color accent styles per row.",
+      "run_id": "run-d5f2cf06a491"
+    },
+    {
+      "criterion_id": "AC-003",
+      "test_case_ids": [
+        "TC-003"
+      ],
+      "status": "partial",
+      "notes": "TC-003 passes and confirms onTabChange is called with 'run' and 'history' respectively on button click. However, the AC also requires that clicking Run hides the History table and shows the Run placeholder, and vice versa — only one view visible at a time. This conditional rendering is untested because no page-level or dashboard-level component is exposed in the interface manifest. The test suite explicitly acknowledges this gap.",
+      "run_id": "run-d5f2cf06a491"
+    },
+    {
+      "criterion_id": "AC-004",
+      "test_case_ids": [
+        "TC-004"
+      ],
+      "status": "covered",
+      "notes": "Smoke test passes: HistoryTable mounts in jsdom and exactly 7 tbody rows are present in the rendered output.",
+      "run_id": "run-d5f2cf06a491"
+    }
+  ]
+}
