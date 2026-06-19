@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "decisions": [
+    {
+      "id": "TD-001",
+      "domain": "language",
+      "decision": "TypeScript (strict) throughout.",
+      "rationale": "Project stack profile: nextjs.",
+      "locked": true,
+      "record": true,
+      "run_id": "project-init",
+      "confirmed_at": "2026-06-19T00:00:00Z"
+    },
+    {
+      "id": "TD-002",
+      "domain": "framework",
+      "decision": "Next.js (App Router): React UI under app/ + components/, backend as Route Handlers under app/api/**/route.ts.",
+      "rationale": "Single toolchain delivers UI and API in one project; codeforge maintains the frontend↔API contract.",
+      "locked": true,
+      "record": true,
+      "run_id": "project-init",
+      "confirmed_at": "2026-06-19T00:00:00Z"
+    }
+  ]
+}
