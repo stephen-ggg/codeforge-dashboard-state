@@ -36,6 +36,52 @@
       "status": "covered",
       "notes": "Smoke test passes: HistoryTable mounts in jsdom and exactly 7 tbody rows are present in the rendered output.",
       "run_id": "run-d5f2cf06a491"
+    },
+    {
+      "criterion_id": "AC-001",
+      "test_case_ids": [],
+      "status": "not_covered",
+      "notes": "readRunSummaries() env guard behaviour (early return of [] when CODEFORGE_PROJECT_DIR is unset or empty) is explicitly out of scope for testing per the brief; no test exercises it.",
+      "run_id": "run-970ce73dbc38"
+    },
+    {
+      "criterion_id": "AC-002",
+      "test_case_ids": [],
+      "status": "not_covered",
+      "notes": "readRunSummaries() filesystem read behaviour (readdir options, codeforge_run.json, brief.txt, RunSummary construction) is explicitly out of scope for testing per the brief.",
+      "run_id": "run-970ce73dbc38"
+    },
+    {
+      "criterion_id": "AC-003",
+      "test_case_ids": [],
+      "status": "not_covered",
+      "notes": "readRunSummaries() directory-filtering behaviour (skipping non-directory entries) is explicitly out of scope for testing per the brief.",
+      "run_id": "run-970ce73dbc38"
+    },
+    {
+      "criterion_id": "AC-004",
+      "test_case_ids": [],
+      "status": "not_covered",
+      "notes": "last_phase derivation from events.jsonl (highest-sequence handoff event) is explicitly out of scope for testing per the brief.",
+      "run_id": "run-970ce73dbc38"
+    },
+    {
+      "criterion_id": "AC-005",
+      "test_case_ids": [
+        "TC-005"
+      ],
+      "status": "covered",
+      "notes": "Four passing sub-tests verify: HTTP 200 with three-item array sorted newest-first by started_at (run-b Mar > run-c Feb > run-a Jan); HTTP 200 with [] when readRunSummaries returns empty; Content-Type matches application/json; response objects contain all required RunSummary fields.",
+      "run_id": "run-970ce73dbc38"
+    },
+    {
+      "criterion_id": "AC-006",
+      "test_case_ids": [
+        "TC-006"
+      ],
+      "status": "covered",
+      "notes": "Three passing sub-tests verify: HTTP 200 with partial array when readRunSummaries returns only successfully-read summaries; HTTP 200 with [] when readRunSummaries returns [] (all runs failed); RunSummary with last_phase: null is included in the response without error.",
+      "run_id": "run-970ce73dbc38"
     }
   ]
 }

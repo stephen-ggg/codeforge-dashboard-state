@@ -2,6 +2,14 @@
 
 **Schema version:** 1.0.0
 
+## ASSUME-T001  —  🔴 open
+
+**Impact:** 🔴 high  
+**Run:** run-970ce73dbc38  
+**Source agent:** test_designer
+
+AC-001 through AC-004 are about readRunSummaries() internals and are explicitly out of scope for testing per the requirements brief ('only the route handler is tested per the brief'). They are not covered in this test suite.
+
 ## ASSUME-001  —  🔴 open
 
 **Impact:** 🟢 low  

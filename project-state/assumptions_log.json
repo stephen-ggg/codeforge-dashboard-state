@@ -198,6 +198,15 @@
       "run_id": "run-d5f2cf06a491",
       "source_agent": "test_designer",
       "status": "open"
+    },
+    {
+      "id": "ASSUME-T001",
+      "description": "AC-001 through AC-004 are about readRunSummaries() internals and are explicitly out of scope for testing per the requirements brief ('only the route handler is tested per the brief'). They are not covered in this test suite.",
+      "impact": "high",
+      "record": true,
+      "run_id": "run-970ce73dbc38",
+      "source_agent": "test_designer",
+      "status": "open"
     }
   ]
 }
