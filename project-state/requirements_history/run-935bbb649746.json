@@ -1,0 +1,86 @@
+{
+  "run_id": "",
+  "run_mode": "continuation",
+  "feature_title": "HistoryTable Async Data Fetch",
+  "feature_description": "Update the existing HistoryTable component to fetch run data from GET /api/runs on mount using useState and useEffect, replacing the prior synchronous getRunRecords() call. When the response array is empty (including when CODEFORGE_PROJECT_DIR is unset on the server, which causes the API to return an empty array), the component displays a 'No runs found.' empty-state message instead of a data table.",
+  "scope": {
+    "in_scope": [
+      "Replacing the synchronous getRunRecords() call in HistoryTable with a fetch('/api/runs') call on mount.",
+      "Rendering one row per RunSummary object returned by the API when the array is non-empty.",
+      "Displaying a 'No runs found.' message when the fetched array is empty.",
+      "Component-level tests that mock the fetch call (via vi.fn() or msw) to exercise the populated and empty-array paths."
+    ],
+    "explicitly_out_of_scope": [
+      "Changes to GET /api/runs or the RunSummary type — those are already implemented and tested.",
+      "A visible loading indicator while the fetch is in-flight.",
+      "Explicit fetch error handling or an error state UI — network failures are not addressed by this feature.",
+      "Changes to any module other than HistoryTable.",
+      "Removing getRunRecords from the RunData module — it may remain exported even if HistoryTable no longer consumes it."
+    ]
+  },
+  "acceptance_criteria": [
+    {
+      "id": "AC-001",
+      "description": "On mount, HistoryTable calls fetch('/api/runs') exactly once and, when the response resolves with a non-empty RunSummary array, renders one table row per RunSummary entry using the fetched data (not data from getRunRecords()).",
+      "testable": true,
+      "priority": "must"
+    },
+    {
+      "id": "AC-002",
+      "description": "When fetch('/api/runs') resolves with an empty array, HistoryTable renders the text 'No runs found.' and no data rows. This covers both an explicitly empty API response and the case where CODEFORGE_PROJECT_DIR is unset on the server (which causes the API to return []).",
+      "testable": true,
+      "priority": "must"
+    }
+  ],
+  "data_contracts": [
+    {
+      "entity": "RunSummary",
+      "fields": [
+        {
+          "name": "id",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "feature",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "runId",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "reached",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "when",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "relationships": [
+        "Returned as an array by GET /api/runs (existing, tested interface from 'Run Summaries Reader and API Route' feature).",
+        "Consumed by HistoryTable to populate table rows."
+      ]
+    }
+  ],
+  "changes_from_prior": {
+    "modified_modules": [
+      "HistoryTable"
+    ],
+    "description": "HistoryTable drops its dependency on RunData/getRunRecords and instead fetches data asynchronously from GET /api/runs on mount. The RunData module and getRunRecords interface are unchanged and remain available to other consumers.",
+    "interface_changes": [
+      "HistoryTable no longer consumes getRunRecords or getStatusConfig from RunData. Its own data source is now the /api/runs HTTP endpoint."
+    ]
+  },
+  "human_confirmed_decisions": []
+}

@@ -11,3 +11,8 @@
 
 **Introduced:** run-970ce73dbc38  
 **Last modified:** run-970ce73dbc38
+
+## HistoryTable Async Data Fetch  ✅ tested
+
+**Introduced:** run-935bbb649746  
+**Last modified:** run-935bbb649746

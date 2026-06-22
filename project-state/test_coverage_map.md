@@ -2,7 +2,7 @@
 
 **Schema version:** 1.0.0
 
-**Coverage summary:** 5/10 covered · 1 partial · 4 not covered
+**Coverage summary:** 7/12 covered · 1 partial · 4 not covered
 
 ## AC-001  —  ❌ not covered
 
@@ -36,11 +36,23 @@
 **Test cases:** `TC-001`
 **Notes:** Both sub-tests pass: CODEFORGE label, Run and History buttons, call-budget text pattern, and <header> root element all verified in jsdom.
 
+## AC-001  —  ✅ covered
+
+**Run:** run-935bbb649746
+**Test cases:** `TC-001`
+**Notes:** All four sub-tests passed: fetch('/api/runs') called exactly once on mount; two data rows rendered for a two-item API response; row content (feature name, runId) matches the mocked API data, not any hardcoded getRunRecords() values; all five column headers (STATUS, FEATURE, RUN ID, REACHED, WHEN) present.
+
 ## AC-002  —  ✅ covered
 
 **Run:** run-d5f2cf06a491
 **Test cases:** `TC-002`
 **Notes:** All eight assertions pass: getRunRecords returns exactly 7 records covering all four status values with required non-empty fields; getStatusConfig returns correct oklch colors and uppercase labels; HistoryTable renders five column headers, 7 tbody rows, all status labels, and correct inline border-color accent styles per row.
+
+## AC-002  —  ✅ covered
+
+**Run:** run-935bbb649746
+**Test cases:** `TC-002`
+**Notes:** All three sub-tests passed: exact text 'No runs found.' rendered when fetch resolves with []; no data table rows present in the empty-state output; fetch('/api/runs') still called exactly once even in the empty-array path.
 
 ## AC-004  —  ✅ covered
 

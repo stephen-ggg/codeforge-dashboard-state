@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0.0",
-  "last_updated_run": "run-d5f2cf06a491",
+  "last_updated_run": "run-935bbb649746",
   "modules": [
     {
       "name": "RunData",
-      "responsibility": "Define the RunRecord and StatusConfig TypeScript types, export the array of exactly 7 hardcoded RunRecord objects, and export the STATUS_CONFIG map that resolves each status key to its display color and uppercase label.",
+      "responsibility": "Define the RunRecord and StatusConfig TypeScript types, export an array of exactly 7 hardcoded RunRecord objects via getRunRecords, and export the STATUS_CONFIG map via getStatusConfig that resolves each status key to its display color and uppercase label.",
       "dependencies": [],
       "exposes": [
         "getRunRecords",
@@ -14,17 +14,12 @@
     },
     {
       "name": "HistoryTable",
-      "responsibility": "Render the scrollable history table with exactly the five column headers (STATUS, FEATURE, RUN ID, REACHED, WHEN) and one row per RunRecord. Each row applies a 2px left-border accent, a colored status dot, and an uppercase label derived from the status config. Internally sources data from RunData.",
-      "dependencies": [
-        "RunData"
-      ],
+      "responsibility": "A 'use client' React component that fetches run data from GET /api/runs on mount using useEffect and useState. Renders a scrollable table with columns STATUS, FEATURE, RUN ID, REACHED, WHEN and one row per RunSummary when the response array is non-empty. Renders the exact text 'No runs found.' when the response array is empty. Does not depend on RunData; any status-display configuration is inlined.",
+      "dependencies": [],
       "exposes": [
         "HistoryTable"
       ],
-      "consumes": [
-        "getRunRecords",
-        "getStatusConfig"
-      ]
+      "consumes": []
     },
     {
       "name": "AppHeader",
@@ -66,13 +61,13 @@
       "kind": "function",
       "owner_module": "RunData",
       "contract": {
-        "module": "lib/run-data",
+        "module": "lib/runData",
         "symbol": "getRunRecords",
-        "signature": "getRunRecords(): RunRecord[]",
+        "signature": "getRunRecords() => RunRecord[]",
         "parameters": [],
         "returns": {
           "type": "RunRecord[]",
-          "description": "Array of exactly 7 hardcoded RunRecord objects. All four status values ('succeeded', 'running', 'awaiting_human', 'failed_terminal') appear at least once across the 7 records."
+          "description": "Array of exactly 7 hardcoded RunRecord objects."
         },
         "raises": []
       },
@@ -85,13 +80,13 @@
       "kind": "function",
       "owner_module": "RunData",
       "contract": {
-        "module": "lib/run-data",
+        "module": "lib/runData",
         "symbol": "getStatusConfig",
-        "signature": "getStatusConfig(): Record<RunRecord['status'], StatusConfig>",
+        "signature": "getStatusConfig() => StatusConfig",
         "parameters": [],
         "returns": {
-          "type": "Record<'succeeded' | 'running' | 'awaiting_human' | 'failed_terminal', StatusConfig>",
-          "description": "Map from each of the four status keys to a StatusConfig object. StatusConfig has fields: status (the key), color (oklch string — succeeded: 'oklch(0.79 0.14 153)', running: 'oklch(0.76 0.13 187)', awaiting_human: 'oklch(0.82 0.14 119)', failed_terminal: 'oklch(0.66 0.21 27)'), and label (uppercase display string)."
+          "type": "StatusConfig",
+          "description": "Map from status key string to an object with display color (oklch string) and uppercase label string."
         },
         "raises": []
       },
@@ -104,13 +99,25 @@
       "kind": "function",
       "owner_module": "HistoryTable",
       "contract": {
-        "module": "components/history-table",
+        "module": "components/HistoryTable",
         "symbol": "HistoryTable",
-        "signature": "HistoryTable(): JSX.Element",
+        "directive": "use client",
+        "signature": "HistoryTable() => JSX.Element",
         "parameters": [],
         "returns": {
           "type": "JSX.Element",
-          "description": "Renders a scrollable <table> element. The <thead> contains exactly one <tr> with five <th> cells: STATUS, FEATURE, RUN ID, REACHED, WHEN. The <tbody> contains exactly 7 <tr> rows, one per RunRecord returned by getRunRecords(). Each row has a 2px solid left border whose color is the accent color from getStatusConfig() for that row's status. Each row renders: a colored status dot (e.g. a small <span> in the accent color), an uppercase status label, the feature string, the runId string, the reached string, and the when string. The component is marked 'use client'."
+          "description": "Renders a scrollable history table with column headers STATUS, FEATURE, RUN ID, REACHED, WHEN and one row per RunSummary when fetch('/api/runs') resolves with a non-empty array; renders the exact text 'No runs found.' and no table rows when the array is empty."
+        },
+        "empty_state_text": "No runs found.",
+        "fetch_behaviour": {
+          "url": "/api/runs",
+          "trigger": "useEffect with empty dependency array — fires exactly once on component mount",
+          "call_count": "exactly one fetch('/api/runs') call per mount",
+          "response_type": "RunSummary[]",
+          "non_empty_path": "Renders a table with column headers STATUS, FEATURE, RUN ID, REACHED, WHEN and one row per RunSummary object; row data sourced exclusively from the fetch response — getRunRecords() is not called",
+          "empty_path": "Renders the string 'No runs found.' and no table rows",
+          "loading_state": "No loading indicator required; no testable constraint on render during pending state",
+          "error_handling": "Out of scope — network errors are not handled by this component"
         },
         "raises": []
       },
@@ -123,34 +130,34 @@
       "kind": "function",
       "owner_module": "AppHeader",
       "contract": {
-        "module": "components/app-header",
+        "module": "components/AppHeader",
         "symbol": "AppHeader",
-        "signature": "AppHeader(props: AppHeaderProps): JSX.Element",
+        "signature": "AppHeader({ activeTab, onTabChange, callCurrent, callCeiling }: AppHeaderProps) => JSX.Element",
         "parameters": [
           {
-            "name": "props.activeTab",
+            "name": "activeTab",
             "type": "'run' | 'history'",
-            "description": "Controls which tab button is rendered in the active state."
+            "description": "Currently active tab key."
           },
           {
-            "name": "props.onTabChange",
+            "name": "onTabChange",
             "type": "(tab: 'run' | 'history') => void",
-            "description": "Called when a tab button is clicked, passing the tab key of the clicked button."
+            "description": "Callback fired when a tab button is clicked."
           },
           {
-            "name": "props.callCurrent",
+            "name": "callCurrent",
             "type": "number",
-            "description": "Current agent-call count to display in the progress bar (e.g. 12)."
+            "description": "Current call budget usage."
           },
           {
-            "name": "props.callCeiling",
+            "name": "callCeiling",
             "type": "number",
-            "description": "Maximum agent-call ceiling to display and use for bar fill ratio (e.g. 50)."
+            "description": "Maximum call budget."
           }
         ],
         "returns": {
           "type": "JSX.Element",
-          "description": "Renders a fixed-position <header> element exactly 50px tall, background #101318, with a 1px bottom border in #272d36. Contains: a green logo dot element, a bold 'CODEFORGE' text label, a 'Run' button and a 'History' button (the button matching activeTab is styled as active), and a call-budget section displaying '{callCurrent} / {callCeiling} calls' with a filled bar whose width is (callCurrent / callCeiling * 100)%. The component is marked 'use client'."
+          "description": "Fixed 50px header with green logo dot, bold CODEFORGE label, tab buttons, and call-budget progress bar."
         },
         "raises": []
       },
@@ -163,13 +170,13 @@
       "kind": "function",
       "owner_module": "RunPlaceholder",
       "contract": {
-        "module": "components/run-placeholder",
+        "module": "components/RunPlaceholder",
         "symbol": "RunPlaceholder",
-        "signature": "RunPlaceholder(): JSX.Element",
+        "signature": "RunPlaceholder() => JSX.Element",
         "parameters": [],
         "returns": {
           "type": "JSX.Element",
-          "description": "Renders a single <div> element acting as a placeholder for the Run tab view. No required props. Content may be an empty div or a minimal 'Run view coming soon' label."
+          "description": "Placeholder div displayed when the Run tab is active. No props required."
         },
         "raises": []
       },
@@ -180,18 +187,11 @@
   ],
   "data_flow": [
     {
-      "name": "RunRecordsToTable",
-      "from_": "RunData",
-      "to": "HistoryTable",
-      "via": "getRunRecords",
-      "data_description": "Array of 7 RunRecord objects flows into HistoryTable at render time. Each record supplies the row data: id (React key), status, feature, runId, reached, when."
-    },
-    {
-      "name": "StatusConfigToTable",
-      "from_": "RunData",
-      "to": "HistoryTable",
-      "via": "getStatusConfig",
-      "data_description": "Status config map flows into HistoryTable. Each row looks up its status key to resolve the accent color (oklch string) and uppercase display label."
+      "name": "FetchRunSummaries",
+      "from_": "HistoryTable",
+      "to": "GET /api/runs",
+      "via": "fetch('/api/runs')",
+      "data_description": "On mount, HistoryTable fires fetch('/api/runs') exactly once via useEffect. The response is a RunSummary array; if non-empty each element maps to one table row; if empty the component renders the text 'No runs found.'."
     },
     {
       "name": "TabStateToHeader",
@@ -212,7 +212,7 @@
       "from_": "DashboardPage",
       "to": "HistoryTable",
       "via": "HistoryTable",
-      "data_description": "DashboardPage renders HistoryTable only when activeTab === 'history'. No props passed; HistoryTable sources its own data."
+      "data_description": "DashboardPage renders HistoryTable only when activeTab === 'history'. No props passed; HistoryTable sources its own data via fetch('/api/runs')."
     },
     {
       "name": "ConditionalRunRender",

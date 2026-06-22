@@ -14,6 +14,13 @@
       "last_modified_run": "run-970ce73dbc38",
       "status": "tested",
       "interfaces": []
+    },
+    {
+      "feature_title": "HistoryTable Async Data Fetch",
+      "introduced_run": "run-935bbb649746",
+      "last_modified_run": "run-935bbb649746",
+      "status": "tested",
+      "interfaces": []
     }
   ]
 }

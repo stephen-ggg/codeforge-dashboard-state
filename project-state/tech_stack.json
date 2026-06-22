@@ -9,30 +9,30 @@
       "locked": true,
       "record": true,
       "supersedes": null,
-      "run_id": "run-d5f2cf06a491",
-      "confirmed_at": "2026-06-19T15:30:12.653522+00:00"
+      "run_id": "run-935bbb649746",
+      "confirmed_at": "2026-06-22T02:49:32.094539+00:00"
     },
     {
       "id": "TD-002",
       "domain": "framework",
       "decision": "Next.js 14 App Router. All page and layout files live under app/. Client-interactive components are marked 'use client'.",
-      "rationale": "Seeded locked decision from stack guidance. App Router is confirmed. HistoryTable and AppHeader are pure client components (no async server data), making them fully compatible with Vitest + jsdom.",
+      "rationale": "Seeded locked decision from stack guidance. App Router is confirmed. HistoryTable is a pure client component (no async server data), making it fully compatible with Vitest + jsdom.",
       "locked": true,
       "record": true,
       "supersedes": null,
-      "run_id": "run-d5f2cf06a491",
-      "confirmed_at": "2026-06-19T15:30:12.653574+00:00"
+      "run_id": "run-935bbb649746",
+      "confirmed_at": "2026-06-22T02:49:32.094592+00:00"
     },
     {
       "id": "TD-003",
       "domain": "testing",
       "decision": "Vitest + React Testing Library (@testing-library/react) + jsdom as the test environment.",
-      "rationale": "AC-004 explicitly names Vitest. React Testing Library is the standard companion for component smoke tests. jsdom allows DOM assertions in a Node environment. Components must be 'use client' to be mountable in jsdom (no async server component APIs used). This supersedes any Jest default that ships with Next.js.",
+      "rationale": "Vitest is the confirmed test runner. React Testing Library is the standard companion for component tests. jsdom allows DOM assertions in a Node environment. Components must be 'use client' to be mountable in jsdom.",
       "locked": true,
       "record": true,
       "supersedes": null,
-      "run_id": "run-d5f2cf06a491",
-      "confirmed_at": "2026-06-19T15:30:12.653589+00:00"
+      "run_id": "run-935bbb649746",
+      "confirmed_at": "2026-06-22T02:49:32.094608+00:00"
     }
   ]
 }

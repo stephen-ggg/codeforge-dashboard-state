@@ -82,6 +82,24 @@
       "status": "covered",
       "notes": "Three passing sub-tests verify: HTTP 200 with partial array when readRunSummaries returns only successfully-read summaries; HTTP 200 with [] when readRunSummaries returns [] (all runs failed); RunSummary with last_phase: null is included in the response without error.",
       "run_id": "run-970ce73dbc38"
+    },
+    {
+      "criterion_id": "AC-001",
+      "test_case_ids": [
+        "TC-001"
+      ],
+      "status": "covered",
+      "notes": "All four sub-tests passed: fetch('/api/runs') called exactly once on mount; two data rows rendered for a two-item API response; row content (feature name, runId) matches the mocked API data, not any hardcoded getRunRecords() values; all five column headers (STATUS, FEATURE, RUN ID, REACHED, WHEN) present.",
+      "run_id": "run-935bbb649746"
+    },
+    {
+      "criterion_id": "AC-002",
+      "test_case_ids": [
+        "TC-002"
+      ],
+      "status": "covered",
+      "notes": "All three sub-tests passed: exact text 'No runs found.' rendered when fetch resolves with []; no data table rows present in the empty-state output; fetch('/api/runs') still called exactly once even in the empty-array path.",
+      "run_id": "run-935bbb649746"
     }
   ]
 }

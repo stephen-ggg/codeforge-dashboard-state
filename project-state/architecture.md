@@ -1,23 +1,21 @@
 # Architecture
 
 **Schema version:** 1.0.0  
-**Last updated run:** run-d5f2cf06a491
+**Last updated run:** run-935bbb649746
 
 ## Modules
 
 ### RunData
 
-**Responsibility:** Define the RunRecord and StatusConfig TypeScript types, export the array of exactly 7 hardcoded RunRecord objects, and export the STATUS_CONFIG map that resolves each status key to its display color and uppercase label.
+**Responsibility:** Define the RunRecord and StatusConfig TypeScript types, export an array of exactly 7 hardcoded RunRecord objects via getRunRecords, and export the STATUS_CONFIG map via getStatusConfig that resolves each status key to its display color and uppercase label.
 
 **Exposes:** getRunRecords, getStatusConfig
 
 ### HistoryTable
 
-**Responsibility:** Render the scrollable history table with exactly the five column headers (STATUS, FEATURE, RUN ID, REACHED, WHEN) and one row per RunRecord. Each row applies a 2px left-border accent, a colored status dot, and an uppercase label derived from the status config. Internally sources data from RunData.
+**Responsibility:** A 'use client' React component that fetches run data from GET /api/runs on mount using useEffect and useState. Renders a scrollable table with columns STATUS, FEATURE, RUN ID, REACHED, WHEN and one row per RunSummary when the response array is non-empty. Renders the exact text 'No runs found.' when the response array is empty. Does not depend on RunData; any status-display configuration is inlined.
 
-**Dependencies:** RunData
 **Exposes:** HistoryTable
-**Consumes:** getRunRecords, getStatusConfig
 
 ### AppHeader
 
@@ -62,15 +60,13 @@
 
 ## Data Flow
 
-- **RunRecordsToTable:** `RunData` → `HistoryTable` via `getRunRecords`
-  Array of 7 RunRecord objects flows into HistoryTable at render time. Each record supplies the row data: id (React key), status, feature, runId, reached, when.
-- **StatusConfigToTable:** `RunData` → `HistoryTable` via `getStatusConfig`
-  Status config map flows into HistoryTable. Each row looks up its status key to resolve the accent color (oklch string) and uppercase display label.
+- **FetchRunSummaries:** `HistoryTable` → `GET /api/runs` via `fetch('/api/runs')`
+  On mount, HistoryTable fires fetch('/api/runs') exactly once via useEffect. The response is a RunSummary array; if non-empty each element maps to one table row; if empty the component renders the text 'No runs found.'.
 - **TabStateToHeader:** `DashboardPage` → `AppHeader` via `AppHeader`
   activeTab string ('run' | 'history'), onTabChange callback, callCurrent (hardcoded e.g. 12), and callCeiling (hardcoded e.g. 50) are passed as props.
 - **TabChangeToPage:** `AppHeader` → `DashboardPage` via `AppHeader`
   onTabChange callback fires with the clicked tab key, triggering a useState update in DashboardPage that re-renders the active view.
 - **ConditionalHistoryRender:** `DashboardPage` → `HistoryTable` via `HistoryTable`
-  DashboardPage renders HistoryTable only when activeTab === 'history'. No props passed; HistoryTable sources its own data.
+  DashboardPage renders HistoryTable only when activeTab === 'history'. No props passed; HistoryTable sources its own data via fetch('/api/runs').
 - **ConditionalRunRender:** `DashboardPage` → `RunPlaceholder` via `RunPlaceholder`
   DashboardPage renders RunPlaceholder only when activeTab === 'run'. No props passed.
